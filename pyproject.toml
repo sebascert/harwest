@@ -36,5 +36,13 @@ package = true
 [tool.setuptools.package-data]
 "harwest.lib.resources" = ["language.json", "readme.template"]
 
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = false
+
 [dependency-groups]
-dev = ["mypy>=0.910"]
+dev = ["mypy>=0.910", "ruff>=0.0.17"]
