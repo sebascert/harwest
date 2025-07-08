@@ -1,4 +1,5 @@
 {
+  "C++17 (GCC 7-32)": "cpp",
   "GNU C++": "cpp",
   "GNU C++0x": "cpp",
   "GNU C11": "cpp",
