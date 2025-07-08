@@ -28,7 +28,7 @@ while integration with various other OJs are still in the kitchen. Contributions
 
 ## Installation
 
-You will require `Python 3.5+` along with `pip3` in order to be able to install and use Harwest.
+You will require `Python 3.10+` along with `pip3` in order to be able to install and use Harwest.
 Refer to the documentation for installing `pip` on [windows](https://phoenixnap.com/kb/install-pip-windows), 
 [ubuntu/linux](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu) or
 [macOS](https://docs.python-guide.org/starting/install3/osx/)
