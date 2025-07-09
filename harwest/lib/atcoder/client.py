@@ -12,8 +12,8 @@ class AtcoderClient:
     CONTEST_URL = "https://atcoder.jp/contests/{contest_id}/tasks/{problem_id}"
     PAGE_SIZE_LIMIT = 20
 
-    def __init__(self, user_name):
-        self.user = user_name
+    def __init__(self, atcoder_data):
+        self.user = atcoder_data["handle"]
         self.session = requests.Session()
 
     @lru_cache(maxsize=PAGE_SIZE_LIMIT + 5)
@@ -39,9 +39,9 @@ class AtcoderClient:
     def get_platform_name():
         return "AtCoder", "AC"
 
-    def get_submission_code(self, contest_id, submission_id):
+    def get_submission_code(self, submission):
         submission_url = AtcoderClient.SUBMISSION_URL.format(
-            contest_id=contest_id, submission_id=submission_id
+            contest_id=submission["contest_id"], submission_id=submission["submission_id"]
         )
         sub_soup = self.__get_content_soup(submission_url)
         submission_code = sub_soup.find("pre", attrs={"id": "submission-code"})
@@ -108,6 +108,7 @@ class AtcoderClient:
                 "submission_id": submission_id,
                 "submission_url": submission_url,
                 "platform": self.get_platform_name()[0],
+                "pages": page_index,
             }
             submissions.append(submission)
         return submissions
