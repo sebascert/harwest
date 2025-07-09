@@ -1,57 +1,94 @@
+import base64
+import hashlib
+import random
+import string
+import time
 from datetime import datetime
+from urllib.parse import urlencode
 
 import requests
-from bs4 import BeautifulSoup
 
 requests.packages.urllib3.disable_warnings()
 
 
 class CodeforcesClient:
-    def __init__(self, user_name):
-        self.user = user_name
+    API = "https://codeforces.com/api/"
+    CONTEST_URL = "https://codeforces.com/contest/{contest_id}/problem/{problem_index}"
+    SUBMISSION_URL = "https://codeforces.com/contest/{contest_id}/submission/{submission_id}"
+
+    CODE_ENCODING = "utf-8"
+
+    # count of submissions per requests to the api
+    PAGE_SIZE_LIMIT = 50
+
+    def __init__(self, codeforces_data):
+        self.user = codeforces_data["handle"]
+        self.api_key = codeforces_data["api_key"]
+        self.api_scret = codeforces_data["api_secret"]
+
         self.session = requests.Session()
+
+    def __get_api_request(self, endpoint, params):
+        params["apiKey"] = self.api_key
+        params["time"] = str(int(time.time()))
+
+        sorted_params = sorted(params.items(), key=lambda item: (item[0], item[1]))
+        salt = "".join(random.choices(string.ascii_letters, k=6))
+        to_hash = "{salt}/{endpoint}?{params}#{secret}".format(
+            salt=salt,
+            endpoint=endpoint,
+            params=urlencode(sorted_params),
+            secret=self.api_scret,
+        )
+        params["apiSig"] = salt + hashlib.sha512(to_hash.encode()).hexdigest()
+
+        url = CodeforcesClient.API + endpoint + "?" + urlencode(params)
+        response = self.session.get(url, verify=False).json()
+        if not response["status"] == "OK":
+            raise ValueError("Error while fetching submissions: " + response["comment"])
+        return response
+
+    def __get_user_submissions(self, page_index, count, include_sources=False):
+        return self.__get_api_request(
+            "user.status",
+            {
+                "handle": self.user,
+                "from": (page_index - 1) * CodeforcesClient.PAGE_SIZE_LIMIT + 1,
+                "count": count,
+                "includeSources": "true" if include_sources else "false",
+            },
+        )
 
     def __get_url_content(self, url):
         return self.session.get(url, verify=False).content
-
-    def __get_content_soup(self, url):
-        return BeautifulSoup(self.__get_url_content(url), "lxml")
 
     @staticmethod
     def get_platform_name():
         return "Codeforces", "CF"
 
     def get_submissions_page_count(self):
-        base_url = "https://codeforces.com/submissions/" + self.user
-        sub_soup = self.__get_content_soup(base_url)
-        pages = sub_soup.findAll("span", attrs={"class": "page-index"})
-        return int(pages[-1].find("a").text)
+        pages = 0
 
-    def get_submission_code(self, contest_id, submission_id):
-        sub_url = "https://codeforces.com/contest/{contest_id}/submission/{submission_id}".format(
-            contest_id=contest_id, submission_id=submission_id
-        )
-        sub_soup = self.__get_content_soup(sub_url)
-        # For debug purpose
-        # print(sub_url)
-        # open("last_submission_page.html", "w").write(str(sub_soup))
-        submission_code = sub_soup.find("pre", attrs={"id": "program-source-text"})
-        if submission_code is None:
-            return None
-        return submission_code.text
+        while True:
+            pages += 1
 
-    def get_contest_tags(self, problem_url):
-        con_soup = self.__get_content_soup(problem_url)
-        span_tags = con_soup.findAll("span", attrs={"class": "tag-box"})
-        return [x.text.strip() for x in span_tags]
+            submissions = len(
+                self.__get_user_submissions(pages, CodeforcesClient.PAGE_SIZE_LIMIT)["result"]
+            )
+            if submissions < CodeforcesClient.PAGE_SIZE_LIMIT:
+                if submissions == 0:
+                    pages -= 1
+                break
+
+        return pages
+
+    def get_submission_code(self, submission):
+        response = self.__get_user_submissions(submission["page"], 1, include_sources=True)
+        code_base64 = response["result"][0]["sourceBase64"]
+        return base64.b64decode(code_base64).decode(CodeforcesClient.CODE_ENCODING)
 
     def get_user_submissions(self, page_index):
-        base_url = "https://codeforces.com/api/user.status?handle={handle}&from={start_page}&count=50".format(
-            handle=self.user, start_page=(page_index - 1) * 50 + 1
-        )
-        response = self.session.get(base_url, verify=False).json()
-        if not response["status"] == "OK":
-            raise ValueError("Error while fetching submissions: " + response)
+        response = self.__get_user_submissions(page_index, CodeforcesClient.PAGE_SIZE_LIMIT)
 
         submissions = []
         for row in response["result"]:
@@ -79,10 +116,8 @@ class CodeforcesClient:
             if "rating" in problem:
                 tags_list.append("*" + str(problem["rating"]))
 
-            contest_url = (
-                "https://codeforces.com/contest/{contest_id}/problem/{problem_index}".format(
-                    contest_id=contest_id, problem_index=problem_index
-                )
+            contest_url = CodeforcesClient.CONTEST_URL.format(
+                contest_id=contest_id, problem_index=problem_index
             )
             lang_name = row["programmingLanguage"]
 
@@ -91,10 +126,8 @@ class CodeforcesClient:
             timestamp = row["creationTimeSeconds"]
             date_time_str = datetime.fromtimestamp(timestamp).strftime("%b/%d/%Y %H:%M")
 
-            sub_url = (
-                "https://codeforces.com/contest/{contest_id}/submission/{submission_id}".format(
-                    contest_id=contest_id, submission_id=submission_id
-                )
+            sub_url = CodeforcesClient.SUBMISSION_URL.format(
+                contest_id=contest_id, submission_id=submission_id
             )
             submission = {
                 "contest_id": contest_id,
@@ -107,6 +140,7 @@ class CodeforcesClient:
                 "submission_id": submission_id,
                 "submission_url": sub_url,
                 "platform": self.get_platform_name()[0],
+                "page": page_index,
             }
             submissions.append(submission)
         return submissions
