@@ -126,7 +126,8 @@ def process_platform(args, platform, workflow):
 
 
 def main():
-    print("""
+    print(
+        r"""
       __  __                              __
      / / / /___ _______      _____  _____/ /_
     / /_/ / __ `/ ___/ | /| / / _ \/ ___/ __/
@@ -134,7 +135,8 @@ def main():
   /_/ /_/\__,_/_/    |__/|__/\___/____/\__/
 
   ==========================================
-  """)
+  """
+    )
 
     parser = build_argument_parser()
     args = parser.parse_args()
