@@ -27,11 +27,15 @@ class AbstractWorkflow(ABC):
 
         problem_url = submission["problem_url"]
         solution_file_path = self.__get_solution_path(submission)
-        solution_code = self.client.get_submission_code(
-            contest_id=submission["contest_id"], submission_id=submission_id
-        )
-        if solution_code is None:
+
+        # TODO optimize by retrieving source controlled when available
+        try:
+            solution_code = self.client.get_submission_code(submission)
+            if solution_code is None:
+                return False
+        except Exception as _:
             return False
+
         with open(solution_file_path, "wb") as fp:
             fp.write(solution_code.encode("utf-8"))
         submission["path"] = self.__to_git_path(self.__get_solution_path(submission))
@@ -49,6 +53,11 @@ class AbstractWorkflow(ABC):
         self.repository.commit(commit_message, submission["timestamp"])
 
         return True
+
+    @staticmethod
+    @abstractmethod
+    def setup(handle):
+        pass
 
     @abstractmethod
     def enrich_submission(self, submission):
@@ -95,7 +104,7 @@ class AbstractWorkflow(ABC):
             "️Harvesting %s (%s) Submissions to %s"
             % (
                 platform,
-                self.user_data[platform.lower()],
+                self.user_data[platform.lower()]["handle"],
                 self.submissions_directory,
             ),
         )

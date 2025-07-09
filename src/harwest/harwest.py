@@ -117,7 +117,11 @@ def process_platform(args, platform, workflow):
         full_scan = True
     if args.setup or platform.lower() not in configs:
         handle = input("> So what's your prestigious " + platform + " Handle Name? ")
-        configs[platform.lower()] = handle
+        print()
+
+        platform_data = workflow.setup(handle)
+
+        configs[platform.lower()] = platform_data
         config.write_setup_data(configs)
         full_scan = True
     if not args.setup:
