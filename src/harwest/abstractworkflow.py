@@ -40,7 +40,8 @@ class AbstractWorkflow(ABC):
         self.repository.add(solution_file_path)
 
         commit_message = "Add solution for problem `{problem_index} - {problem_name}`\n".format(
-            problem_name=submission["problem_name"], problem_index=submission["problem_index"]
+            problem_name=submission["problem_name"],
+            problem_index=submission["problem_index"],
         )
         commit_message += "Link: {problem_url}\n".format(problem_url=problem_url)
         commit_message += "Tags: {tags}\n".format(tags=", ".join(submission["tags"]))
@@ -72,8 +73,9 @@ class AbstractWorkflow(ABC):
         return os.path.join(*path.split(os.sep)[-3:])
 
     @staticmethod
-    def __print_progress(submission, page_index, iteration, total, width):
-        text = "\r\U0000231b  Currently scanning page #%d: (%d/%d) " % (
+    def __print_progress(harvested, submission, page_index, iteration, total, width):
+        status = "\r\U0000231b" if harvested else "\U0000274c"
+        text = status + "  Currently scanning page #%d: (%d/%d) " % (
             page_index,
             iteration,
             total,
@@ -81,6 +83,7 @@ class AbstractWorkflow(ABC):
         problem_name = submission["problem_name"] if "problem_name" in submission else ""
         problem_url = submission["problem_url"] if "problem_url" in submission else ""
         text += problem_name + " " + problem_url
+
         print("\r", " " * width, end="\r")
         print(text, end="\r")
         return len(text)
@@ -90,7 +93,11 @@ class AbstractWorkflow(ABC):
         print(
             "\U000026cf",
             "️Harvesting %s (%s) Submissions to %s"
-            % (platform, self.user_data[platform.lower()], self.submissions_directory),
+            % (
+                platform,
+                self.user_data[platform.lower()],
+                self.submissions_directory,
+            ),
         )
         page_index = start_page_index
         try:
@@ -99,9 +106,15 @@ class AbstractWorkflow(ABC):
                 response = []
                 last_width = 0
                 for index, submission in enumerate(submissions):
-                    response.append(self.__add_submission(submission))
+                    harvested = self.__add_submission(submission)
+                    response.append(harvested)
                     last_width = self.__print_progress(
-                        submission, page_index, index + 1, len(submissions), last_width
+                        harvested,
+                        submission,
+                        page_index,
+                        index + 1,
+                        len(submissions),
+                        last_width,
                     )
                 if not len(response) or (not any(response) and not full_scan):
                     break
