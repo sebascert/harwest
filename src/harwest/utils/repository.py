@@ -55,7 +55,7 @@ class Repository:
                 self.git.remote("add", "origin", remote_url)
             except GitCommandError:
                 pass
-            args = ["origin", "master"]
+            args = ["origin", self.git.branch("--show-current")]
             if force_push:
                 args.insert(0, "-f")
             self.git.push(*args)
