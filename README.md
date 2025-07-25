@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/harwest2.svg)](https://pypi.python.org/pypi/harwest2)
 [![Downloads](https://pepy.tech/badge/harwest2)](https://pepy.tech/project/harwest2)
-[![License](https://img.shields.io/pypi/l/harwest2.svg)](https://github.com/sebascert/harwest/blob/main/LICENSE)
+[![PyPI - License](https://img.shields.io/pypi/l/harwest2)](https://github.com/sebascert/harwest/blob/main/LICENSE)
 
 > This project is a maintained fork of
 > [harwest](https://github.com/nileshsah/harwest-tool).

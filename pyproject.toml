@@ -1,17 +1,26 @@
 [project]
-name = "Harwest2"
+name = "harwest2"
 version = "0.4.0"
 description = "Harvest code submissions from different platforms to git"
 readme = "README.md"
 authors = [
-    { name = "Sebastian Certuche", email = "sebascertuche@gmail" },
+    { name = "Sebastian Certuche", email = "sebascertuche@gmail.com" },
     { name = "Nsystemilesh Sah", email = "nilesh.sah13@outlook.com" },
 ]
+maintainers = [
+    { name = "Sebastian Certuche", email = "sebascertuche@gmail.com" },
+]
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["competitive programming", "git", "ojs", "codeforces"]
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Education",
+    "Topic :: Software Development :: Version Control",
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
@@ -24,7 +33,9 @@ dependencies = [
 ]
 
 [project.urls]
-github = "https://github.com/sebascert/harwest"
+Homepage = "https://github.com/sebascert/harwest"
+Repositoty = "https://github.com/sebascert/harwest.git"
+Issues = "https://github.com/sebascert/harwest/issues"
 
 [project.scripts]
 harwest = "harwest.harwest:main"
@@ -34,12 +45,13 @@ harwest = "harwest.harwest:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.sdist]
+packages = ["src/harwest"]
+include = ["README.md", "pyproject.toml", "uv.lock"]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/harwest"]
-include = [
-    "src/harwest/resources/readme.template",
-    "src/harwest/resources/language.json",
-]
+include = ["README.md", "pyproject.toml", "uv.lock"]
 
 # development dependencies
 [dependency-groups]
