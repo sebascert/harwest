@@ -4,7 +4,7 @@ from datetime import datetime
 
 from git import GitCommandError, Repo
 
-from harwest.lib.utils import config
+from harwest.utils import config
 
 
 class Repository:
@@ -24,7 +24,7 @@ class Repository:
             git.config("user.email", config.get_author_email())
             git.config("user.name", config.get_author_name())
             shutil.copy2(
-                str(config.RESOURCES_DIR.joinpath("readme.template")),
+                config.README_TEMPLATE_PATH,
                 self.readme_path,
             )
             git.add("README.md")

@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from harwest.lib.utils import config
+from harwest.utils import config
 
 
 class Submissions:
@@ -68,7 +68,7 @@ class Submissions:
             index -= 1
 
         template = open(
-            str(config.RESOURCES_DIR.joinpath("readme.template")),
+            config.README_TEMPLATE_PATH,
             "r",
             encoding="utf-8",
         ).read()

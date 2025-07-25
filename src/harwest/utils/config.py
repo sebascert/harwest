@@ -1,11 +1,13 @@
 import json
 import os
-from pathlib import Path
 
-ROOT_DIR = Path(__file__).parent.parent.parent
-RESOURCES_DIR = ROOT_DIR.joinpath("lib", "resources")
+from importlib.resources import files
 
-lang_dict = json.load(open(str(RESOURCES_DIR.joinpath("language.json")), "r"))
+RESOURCES_DIR = files("harwest.resources")
+README_TEMPLATE_PATH = str(RESOURCES_DIR.joinpath("readme.template"))
+LANG_PATH = str(RESOURCES_DIR.joinpath("language.json"))
+SETUP_PATH = str(RESOURCES_DIR.joinpath("setup.json"))
+lang_dict = json.load(open(LANG_PATH, "r"))
 
 
 def get_current_path():
@@ -13,7 +15,7 @@ def get_current_path():
 
 
 def load_setup_data():
-    path = str(RESOURCES_DIR.joinpath("setup.json"))
+    path = SETUP_PATH
     if not os.path.exists(path):
         return None
     return json.load(open(path, "r"))
@@ -48,7 +50,7 @@ def get_language_extension(lang_name):
     if lang_name not in lang_dict.keys():
         raise ValueError(
             "Please provide correct file extension for the language '" + lang_name + "' in",
-            str(RESOURCES_DIR.joinpath("language.json")),
+            LANG_PATH,
             "file",
         )
     return lang_dict[lang_name]
@@ -70,5 +72,5 @@ def write_setup_data(setup):
         obj=setup,
         sort_keys=True,
         indent=2,
-        fp=open(str(RESOURCES_DIR.joinpath("setup.json")), "w"),
+        fp=open(SETUP_PATH, "w"),
     )

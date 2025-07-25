@@ -212,9 +212,7 @@ __marimo__/
 
 # Project ignores
 
-*.json
-!/harwest/lib/resources/language.json
+/src/harwest/resources/setup.json
+!/src/harwest/resources/language.json
 
 *.html
-
-!/harwest/lib

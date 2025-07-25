@@ -1,12 +1,15 @@
 [project]
 name = "harwest"
-version = "0.3.2"
+version = "0.4.0"
 description = "Harvest code submissions from different platforms to git"
 readme = "README.md"
+authors = [
+    { name = "Sebastian Certuche", email = "sebascertuche@gmail" },
+    { name = "Nsystemilesh Sah", email = "nilesh.sah13@outlook.com" },
+]
 requires-python = ">=3.10"
-authors = [{ name = "Nilesh Sah", email = "nilesh.sah13@outlook.com" }]
 license = { text = "MIT" }
-keywords = ["harvest", "git", "submissions"]
+keywords = ["competitive programming", "git", "ojs", "codeforces"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -21,20 +24,26 @@ dependencies = [
 ]
 
 [project.urls]
-github = "https://github.com/nileshsah/harwest-tool"
+github = "https://github.com/sebascert/harwest"
 
 [project.scripts]
 harwest = "harwest.harwest:main"
 
+# build configs
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.uv]
-package = true
+[tool.hatch.build.targets.wheel]
+packages = ["src/harwest"]
+include = [
+    "src/harwest/resources/readme.template",
+    "src/harwest/resources/language.json",
+]
 
-[tool.setuptools.package-data]
-"harwest.lib.resources" = ["language.json", "readme.template"]
+# development dependencies
+[dependency-groups]
+dev = ["mypy>=0.910", "ruff>=0.0.17"]
 
 [tool.ruff]
 line-length = 100
@@ -43,6 +52,3 @@ line-length = 100
 quote-style = "double"
 indent-style = "space"
 docstring-code-format = false
-
-[dependency-groups]
-dev = ["mypy>=0.910", "ruff>=0.0.17"]

@@ -1,9 +1,9 @@
 import os
 from abc import ABC, abstractmethod
 
-from harwest.lib.utils import config
-from harwest.lib.utils.repository import Repository
-from harwest.lib.utils.submissions import Submissions
+from harwest.utils import config
+from harwest.utils.repository import Repository
+from harwest.utils.submissions import Submissions
 
 
 class AbstractWorkflow(ABC):

@@ -3,9 +3,9 @@
 import argparse
 import os
 
-from harwest.lib.atcoder.workflow import AtcoderWorkflow
-from harwest.lib.codeforces.workflow import CodeforcesWorkflow
-from harwest.lib.utils import config
+from harwest.atcoder.workflow import AtcoderWorkflow
+from harwest.codeforces.workflow import CodeforcesWorkflow
+from harwest.utils import config
 
 
 def build_argument_parser():

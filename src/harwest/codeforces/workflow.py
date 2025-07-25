@@ -1,5 +1,5 @@
-from harwest.lib.abstractworkflow import AbstractWorkflow
-from harwest.lib.codeforces.client import CodeforcesClient
+from harwest.abstractworkflow import AbstractWorkflow
+from harwest.codeforces.client import CodeforcesClient
 
 
 class CodeforcesWorkflow(AbstractWorkflow):

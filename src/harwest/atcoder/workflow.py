@@ -1,5 +1,5 @@
-from harwest.lib.abstractworkflow import AbstractWorkflow
-from harwest.lib.atcoder.client import AtcoderClient
+from harwest.abstractworkflow import AbstractWorkflow
+from harwest.atcoder.client import AtcoderClient
 
 
 class AtcoderWorkflow(AbstractWorkflow):
