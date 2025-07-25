@@ -130,10 +130,18 @@ $ harwest codeforces # example
 
 to harvest your submissions from the Codeforces platform. If it's the first time
 you're running the command, you'll be prompted for providing your Codeforces
-handle name
+handle name and api credentials
 
 ```bash
 > So what's your prestigious Codeforces Handle Name? nellex
+
+🔐 To access the platform's data, we’ll need your API credentials
+
+You can retrieve your API Key and Secret by following this instructions:
+👉 https://codeforces.com/apiHelp/
+
+> Could you please enter your API Key?
+> And your API Secret?
 ```
 
 Harwest will then start scraping all your submissions, starting from page 1 till
@@ -171,7 +179,7 @@ by running:
 
 ```bash
 $ harwest <platform> --full-scan
-$ harwest atcoder --full-scan # example
+$ harwest codeforces --full-scan # example
 ```
 
 ## Reconfigure
