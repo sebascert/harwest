@@ -50,11 +50,11 @@ path = "src/harwest/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 packages = ["src/harwest"]
-include = ["README.md", "pyproject.toml", "uv.lock"]
+force-include = { "uv.lock" = "uv.lock", ".python-version" = ".python-version" }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/harwest"]
-include = ["README.md", "pyproject.toml", "uv.lock"]
+force-include = { "uv.lock" = "uv.lock", ".python-version" = ".python-version" }
 
 # development dependencies
 [dependency-groups]
