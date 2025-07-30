@@ -1,6 +1,5 @@
 [project]
 name = "harwest2"
-version = "0.4.1"
 description = "Harvest code submissions from different platforms to git"
 readme = "README.md"
 authors = [
@@ -31,6 +30,7 @@ dependencies = [
     "lxml>=5.0.2",
     "requests>=2.27.1",
 ]
+dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/sebascert/harwest"
@@ -45,6 +45,9 @@ harwest = "harwest.harwest:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.version]
+path = "src/harwest/__init__.py"
+
 [tool.hatch.build.targets.sdist]
 packages = ["src/harwest"]
 include = ["README.md", "pyproject.toml", "uv.lock"]
@@ -55,7 +58,7 @@ include = ["README.md", "pyproject.toml", "uv.lock"]
 
 # development dependencies
 [dependency-groups]
-dev = ["mypy>=0.910", "ruff>=0.0.17"]
+dev = ["hatch>=1.14.1", "mypy>=0.910", "ruff>=0.0.17"]
 
 [tool.ruff]
 line-length = 100
