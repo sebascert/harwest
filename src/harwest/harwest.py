@@ -1,14 +1,13 @@
-# coding=utf-8
-
 import argparse
 import os
 
+from harwest.abstractworkflow import AbstractWorkflow
 from harwest.atcoder.workflow import AtcoderWorkflow
 from harwest.codeforces.workflow import CodeforcesWorkflow
 from harwest.utils import config
 
 
-def build_argument_parser():
+def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Creates a repository of all the submissions from a given platform"
     )
@@ -52,8 +51,7 @@ def build_argument_parser():
     return parser
 
 
-def init():
-    # Get directory details
+def init() -> dict:
     print(
         "[1] We'll need to create a directory to store all your files\n",
         "   The directory will be created as",
@@ -101,15 +99,17 @@ def init():
     return config_dict
 
 
-def codeforces(args):
+def codeforces(args: argparse.Namespace) -> None:
     process_platform(args, "Codeforces", CodeforcesWorkflow)
 
 
-def atcoder(args):
+def atcoder(args: argparse.Namespace) -> None:
     process_platform(args, "AtCoder", AtcoderWorkflow)
 
 
-def process_platform(args, platform, workflow):
+def process_platform(
+    args: argparse.Namespace, platform: str, workflow: type[AbstractWorkflow]
+) -> None:
     configs = config.load_setup_data()
     full_scan = False
     if not configs:
@@ -129,7 +129,7 @@ def process_platform(args, platform, workflow):
         workflow(configs).run(start_page_index=args.start_page, full_scan=full_scan)
 
 
-def main():
+def main() -> None:
     print(
         r"""
       __  __                              __

@@ -67,3 +67,16 @@ line-length = 100
 quote-style = "double"
 indent-style = "space"
 docstring-code-format = false
+
+[tool.ruff.lint]
+select = [
+    "E",     # Pycodestyle errors
+    "F",     # Pyflakes (undeclared variables, unused imports, etc.)
+    "I",     # isort (import sorting)
+    "UP",    #* pyupgrade (modern Python idioms)
+    "B",     # flake8-bugbear (common security and performance issues)
+    "S",     # flake8-bandit (security checks)
+    "ASYNC", # flake8-async (async best practices)
+    "BLE",   # flake8-blind-except (blind except clauses and related issues)
+    "ANN",   #* Type-related checks (type hint correctness, mismatches, etc.)
+]

@@ -1,52 +1,52 @@
 import json
 import os
-
 from importlib.resources import files
+from dataclasses import dataclass
 
 RESOURCES_DIR = files("harwest.resources")
 README_TEMPLATE_PATH = str(RESOURCES_DIR.joinpath("readme.template"))
 LANG_PATH = str(RESOURCES_DIR.joinpath("language.json"))
 SETUP_PATH = str(RESOURCES_DIR.joinpath("setup.json"))
-lang_dict = json.load(open(LANG_PATH, "r"))
+lang_dict: dict[str, str] = json.load(open(LANG_PATH))
 
 
-def get_current_path():
-    return
+@dataclass
+class Config:
 
 
-def load_setup_data():
-    path = SETUP_PATH
-    if not os.path.exists(path):
+
+def load_setup_data() -> dict[str, any] | None:
+    if not os.path.exists(SETUP_PATH):
         return None
-    return json.load(open(path, "r"))
+    return json.load(open(SETUP_PATH))
 
 
-def get_submissions_dir():
+def get_submissions_dir() -> str:
     return load_setup_data()["directory"]
 
 
-def get_author():
+def get_author() -> str:
     name = load_setup_data()["name"]
     email = load_setup_data()["email"]
-    return "{name} <{email}>".format(name=name, email=email)
+    return f"{name} <{email}>"
 
 
-def get_author_name():
+def get_author_name() -> str:
     return load_setup_data()["name"]
 
 
-def get_author_email():
+def get_author_email() -> str:
     return load_setup_data()["email"]
 
 
-def get_remote_url():
+def get_remote_url() -> str:
     data = load_setup_data()
     if "remote" in data.keys():
         return load_setup_data()["remote"]
     return None
 
 
-def get_language_extension(lang_name):
+def get_language_extension(lang_name: str) -> str:
     if lang_name not in lang_dict.keys():
         raise ValueError(
             "Please provide correct file extension for the language '" + lang_name + "' in",
